@@ -1,0 +1,17 @@
+{
+    "name": "mz/laravel-microsoft-graph-mail-driver",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mz\\LaravelMicrosoftGraphMailDriver\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mahmoud Abdelaziz"
+        }
+    ]
+}
