@@ -1,4 +1,5 @@
 {
+    "version": "v10.0.0",
     "name": "mz/laravel-microsoft-graph-mail-driver",
     "type": "library",
     "require-dev": {
