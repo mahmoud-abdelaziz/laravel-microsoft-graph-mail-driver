@@ -2,9 +2,9 @@
     "name": "mz/laravel-microsoft-graph-mail-driver",
     "type": "library",
     "require-dev": {
-        "illuminate/http": "^8.x-dev",
-        "illuminate/support": "^8.x-dev",
-        "illuminate/mail": "^8.x-dev"
+        "illuminate/http": "^10.x-dev",
+        "illuminate/support": "^10.x-dev",
+        "illuminate/mail": "^10.x-dev"
     },
     "autoload": {
         "psr-4": {

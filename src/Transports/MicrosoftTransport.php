@@ -2,45 +2,41 @@
 
 namespace Mz\LaravelMicrosoftGraphMailDriver\Transports;
 
-use Illuminate\Mail\Transport\Transport;
 use Mz\LaravelMicrosoftGraphMailDriver\Services\LaravelMicrosoftGraphMailDriverService;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
+use Symfony\Component\Mime\MessageConverter;
 
-class MicrosoftTransport extends Transport
+class MicrosoftTransport extends AbstractTransport
 {
-    /**
-     * Guzzle client instance.
-     *
-     * @var LaravelMicrosoftGraphMailDriverService
-     */
-    protected $service;
-
     /**
      * Create a new Custom transport instance.
      *
      * @param  LaravelMicrosoftGraphMailDriverService $service
      */
-    public function __construct(LaravelMicrosoftGraphMailDriverService $service)
+    public function __construct(private LaravelMicrosoftGraphMailDriverService $service)
     {
-        $this->service = $service;
+        parent::__construct();
+    }
+
+    protected function doSend(SentMessage $message): void
+    {
+        $email = MessageConverter::toEmail($message->getOriginalMessage());
+        $this->service->send(
+            toMails: $this->mapContactsToNameEmail($email->getTo()),
+            subject: $email->getSubject(),
+            body: $email->getHtmlBody(),
+            ccMails: $this->mapContactsToNameEmail($email->getCc()),
+            bccMails: $this->mapContactsToNameEmail($email->getBcc()),
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * Get the string representation of the transport.
      */
-    public function send(\Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
+    public function __toString(): string
     {
-        $this->beforeSendPerformed($message);
-
-        $this->service->send(
-            toMails: $this->mapContactsToNameEmail($message->getTo()),
-            subject: $message->getSubject(),
-            body: $message->getBody(),
-            ccMails: $this->mapContactsToNameEmail($message->getCc()),
-            bccMails: $this->mapContactsToNameEmail($message->getBcc()),
-        );
-        $this->sendPerformed($message);
-
-        return $this->numberOfRecipients($message);
+        return 'microsoft';
     }
     protected function mapContactsToNameEmail($contacts)
     {
@@ -53,5 +49,4 @@ class MicrosoftTransport extends Transport
         }
         return $formatted;
     }
-
 }
